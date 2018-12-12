@@ -41,9 +41,19 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       const { page, perPage } = params.pagination;
       // TODO: Allow sorting, filtering etc.
       const query = {
-        'page[number]': page,
-        'page[size]': perPage,
+        'page[offset]': (page - 1) * perPage,
+        'page[limit]': perPage,
       };
+
+      if (params.filter.email) {
+        query['filter[email]'] = `:${params.filter.email}`;
+      }
+
+      if (params.filter.name) {
+        query['filter[name]'] = `:${params.filter.name}`;
+      }
+
+
       url = `${apiUrl}/${resource}?${stringify(query)}`;
       break;
     }
@@ -102,7 +112,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
               { id: value.id },
               value.attributes,
             )),
-            total: response.data.meta[settings.total],
+            total: response.data.meta.page[settings.total],
           };
         }
 
