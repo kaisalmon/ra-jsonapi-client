@@ -123,6 +123,20 @@ exports.default = function (apiUrl) {
           break;
         }
 
+      case _actions.GET_MANY_REFERENCE:
+        {
+          var _params$pagination2 = params.pagination,
+              _page = _params$pagination2.page,
+              _perPage = _params$pagination2.perPage;
+          var _params$sort = params.sort,
+              field = _params$sort.field,
+              order = _params$sort.order;
+
+          var _query2 = 'filter[' + params.target + ']=' + params.id;
+          url = apiUrl + '/' + resource + '?' + _query2;
+          break;
+        }
+
       default:
         throw new _errors.NotImplementedError('Unsupported Data Provider request type ' + type);
     }
@@ -133,7 +147,17 @@ exports.default = function (apiUrl) {
           {
             return {
               data: response.data.data.map(function (value) {
-                return Object.assign({ id: value.id }, value.attributes);
+                return Object.assign({ id: value.id }, value.attributes, { relationships: value.relationships });
+              }),
+              total: response.data.meta.page[settings.total]
+            };
+          }
+
+        case _actions.GET_MANY_REFERENCE:
+          {
+            return {
+              data: response.data.data.map(function (value) {
+                return Object.assign({ id: value.id }, value.attributes, { relationships: value.relationships });
               }),
               total: response.data.meta.page[settings.total]
             };
@@ -143,12 +167,13 @@ exports.default = function (apiUrl) {
           {
             var _response$data$data = response.data.data,
                 id = _response$data$data.id,
-                attributes = _response$data$data.attributes;
-
+                attributes = _response$data$data.attributes,
+                relationships = _response$data$data.relationships;
 
             return {
               data: _extends({
-                id: id }, attributes)
+                id: id }, attributes, { relationships: relationships
+              })
             };
           }
 

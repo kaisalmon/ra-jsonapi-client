@@ -8,6 +8,7 @@ import {
   UPDATE,
   DELETE,
   GET_MANY,
+  GET_MANY_REFERENCE,
 } from './actions';
 
 import defaultSettings from './default-settings';
@@ -99,6 +100,14 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       break;
     }
 
+    case GET_MANY_REFERENCE: {
+      const { page, perPage } = params.pagination;
+      const { field, order } = params.sort;
+      const query = `filter[${params.target}]=${params.id}`;
+      url = `${apiUrl}/${resource}?${query}`;
+      break;
+    }
+
     default:
       throw new NotImplementedError(`Unsupported Data Provider request type ${type}`);
   }
@@ -111,17 +120,28 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
             data: response.data.data.map(value => Object.assign(
               { id: value.id },
               value.attributes,
+              { relationships: value.relationships },
+            )),
+            total: response.data.meta.page[settings.total],
+          };
+        }
+
+        case GET_MANY_REFERENCE: {
+          return {
+            data: response.data.data.map(value => Object.assign(
+              { id: value.id },
+              value.attributes,
+              { relationships: value.relationships },
             )),
             total: response.data.meta.page[settings.total],
           };
         }
 
         case GET_ONE: {
-          const { id, attributes } = response.data.data;
-
+          const { id, attributes, relationships } = response.data.data;
           return {
             data: {
-              id, ...attributes,
+              id, ...attributes, relationships,
             },
           };
         }
