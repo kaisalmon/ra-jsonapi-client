@@ -36,7 +36,6 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
   const options = {
     headers: settings.headers,
   };
-
   switch (type) {
     case GET_LIST: {
       const { page, perPage } = params.pagination;
@@ -101,8 +100,6 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
     }
 
     case GET_MANY_REFERENCE: {
-      const { page, perPage } = params.pagination;
-      const { field, order } = params.sort;
       const query = `filter[${params.target}]=${params.id}`;
       url = `${apiUrl}/${resource}?${query}`;
       break;
@@ -126,7 +123,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
           };
         }
 
-        case GET_MANY_REFERENCE: {
+        case GET_MANY: {
           return {
             data: response.data.data.map(value => Object.assign(
               { id: value.id },
@@ -134,6 +131,16 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
               { relationships: value.relationships },
             )),
             total: response.data.meta.page[settings.total],
+          };
+        }
+
+
+        case GET_MANY_REFERENCE: {
+          const rawdata = response.data.data;
+          const data = rawdata.map(e => ({ ...e.attributes, id: e.id }));
+          return {
+            data,
+            total: data.length,
           };
         }
 

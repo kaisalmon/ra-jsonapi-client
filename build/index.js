@@ -54,7 +54,6 @@ exports.default = function (apiUrl) {
     var options = {
       headers: settings.headers
     };
-
     switch (type) {
       case _actions.GET_LIST:
         {
@@ -132,6 +131,7 @@ exports.default = function (apiUrl) {
               field = _params$sort.field,
               order = _params$sort.order;
 
+          console.log('FISH', params);
           var _query2 = 'filter[' + params.target + ']=' + params.id;
           url = apiUrl + '/' + resource + '?' + _query2;
           break;
@@ -153,13 +153,26 @@ exports.default = function (apiUrl) {
             };
           }
 
-        case _actions.GET_MANY_REFERENCE:
+        case _actions.GET_MANY:
           {
             return {
               data: response.data.data.map(function (value) {
                 return Object.assign({ id: value.id }, value.attributes, { relationships: value.relationships });
               }),
               total: response.data.meta.page[settings.total]
+            };
+          }
+
+        case _actions.GET_MANY_REFERENCE:
+          {
+            var rawdata = response.data.data;
+            var _data = rawdata.map(function (e) {
+              return _extends({}, e.attributes, { id: e.id });
+            });
+            console.log('little fish', url, _data, settings);
+            return {
+              data: _data,
+              total: _data.length
             };
           }
 
