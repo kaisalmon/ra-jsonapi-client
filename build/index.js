@@ -54,6 +54,7 @@ exports.default = function (apiUrl) {
     var options = {
       headers: settings.headers
     };
+    console.log('HERE:::', type);
     switch (type) {
       case _actions.GET_LIST:
         {
@@ -80,6 +81,7 @@ exports.default = function (apiUrl) {
         }
 
       case _actions.GET_ONE:
+
         url = apiUrl + '/' + resource + '/' + params.id;
         break;
 
@@ -103,7 +105,7 @@ exports.default = function (apiUrl) {
             }
           };
 
-          options.method = 'PUT';
+          options.method = 'PATCH';
           options.data = JSON.stringify(data);
           break;
         }
@@ -115,23 +117,18 @@ exports.default = function (apiUrl) {
 
       case _actions.GET_MANY:
         {
-          var _query = {
-            filter: JSON.stringify({ id: params.ids })
-          };
-          url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(_query);
+          var ids = params.ids;
+
+          var _query = ids.map(function (id) {
+            return 'filter[id]=' + id;
+          }).join('&');
+          url = apiUrl + '/' + resource + '?' + _query + '}';
+          console.log(params, _query, url);
           break;
         }
 
       case _actions.GET_MANY_REFERENCE:
         {
-          var _params$pagination2 = params.pagination,
-              _page = _params$pagination2.page,
-              _perPage = _params$pagination2.perPage;
-          var _params$sort = params.sort,
-              field = _params$sort.field,
-              order = _params$sort.order;
-
-          console.log('FISH', params);
           var _query2 = 'filter[' + params.target + ']=' + params.id;
           url = apiUrl + '/' + resource + '?' + _query2;
           break;
@@ -169,7 +166,6 @@ exports.default = function (apiUrl) {
             var _data = rawdata.map(function (e) {
               return _extends({}, e.attributes, { id: e.id });
             });
-            console.log('little fish', url, _data, settings);
             return {
               data: _data,
               total: _data.length

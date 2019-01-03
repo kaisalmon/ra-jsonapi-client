@@ -36,6 +36,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
   const options = {
     headers: settings.headers,
   };
+  console.log('HERE:::', type);
   switch (type) {
     case GET_LIST: {
       const { page, perPage } = params.pagination;
@@ -59,6 +60,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
     }
 
     case GET_ONE:
+
       url = `${apiUrl}/${resource}/${params.id}`;
       break;
 
@@ -81,7 +83,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
         },
       };
 
-      options.method = 'PUT';
+      options.method = 'PATCH';
       options.data = JSON.stringify(data);
       break;
     }
@@ -92,10 +94,10 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       break;
 
     case GET_MANY: {
-      const query = {
-        filter: JSON.stringify({ id: params.ids }),
-      };
-      url = `${apiUrl}/${resource}?${stringify(query)}`;
+      const { ids } = params;
+      const query = ids.map(id => `filter[id]=${id}`).join('&');
+      url = `${apiUrl}/${resource}?${query}}`;
+      console.log(params, query, url);
       break;
     }
 
