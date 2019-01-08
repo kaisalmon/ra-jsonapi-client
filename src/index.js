@@ -41,8 +41,8 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       const { page, perPage } = params.pagination;
       // TODO: Allow sorting, filtering etc.
       const query = {
-        'page[number]': page,
-        'page[size]': perPage,
+        'page[offset]': (page - 1) * perPage,
+        'page[limit]': perPage,
       };
       url = `${apiUrl}/${resource}?${stringify(query)}`;
       break;
