@@ -68,13 +68,9 @@ exports.default = function (apiUrl) {
             'page[limit]': perPage
           };
 
-          if (params.filter.email) {
-            query['filter[email]'] = ':' + params.filter.email;
-          }
-
-          if (params.filter.name) {
-            query['filter[name]'] = ':' + params.filter.name;
-          }
+          Object.keys(params.filter).forEach(function (f) {
+            query['filter[' + f + ']'] = params.filter[f];
+          });
 
           url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
           break;
