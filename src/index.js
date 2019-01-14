@@ -47,7 +47,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       };
 
       Object.keys(params.filter).forEach((f) => {
-        query[`filter[${f}]`] = params.filter[f];
+        query[`filter[${f}]`] = `${params.filter[f]}`;
       });
 
       url = `${apiUrl}/${resource}?${stringify(query)}`;
@@ -116,7 +116,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
               value.attributes,
               { relationships: value.relationships },
             )),
-            total: response.data.meta.page[settings.total],
+            total: settings ? response.data.meta.page[settings.total] : 0,
           };
         }
 
