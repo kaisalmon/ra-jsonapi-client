@@ -69,7 +69,7 @@ exports.default = function (apiUrl) {
           };
 
           Object.keys(params.filter).forEach(function (f) {
-            query['filter[' + f + ']'] = params.filter[f];
+            query['filter[' + f + ']'] = ':' + params.filter[f];
           });
 
           url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
@@ -142,7 +142,7 @@ exports.default = function (apiUrl) {
               data: response.data.data.map(function (value) {
                 return Object.assign({ id: value.id }, value.attributes, { relationships: value.relationships });
               }),
-              total: response.data.meta.page[settings.total]
+              total: settings ? response.data.meta.page[settings.total] : 0
             };
           }
 
