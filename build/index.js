@@ -82,8 +82,8 @@ exports.default = function (apiUrl) {
               query['filter[' + f + ']'] = ':' + params.filter[f];
             }
           });
-
           url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
+          console.log(params, query, url);
           break;
         }
 
