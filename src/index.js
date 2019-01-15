@@ -47,7 +47,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       };
 
       Object.keys(params.filter).forEach((f) => {
-        query[`filter[${f}]`] = `${params.filter[f]}`;
+        query[`filter[${f}]`] = `:${params.filter[f]}`;
       });
 
       url = `${apiUrl}/${resource}?${stringify(query)}`;
