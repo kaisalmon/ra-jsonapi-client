@@ -47,7 +47,18 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       };
 
       Object.keys(params.filter).forEach((f) => {
-        query[`filter[${f}]`] = `:${params.filter[f]}`;
+        /** ************************************************
+        * Sometimes queries need to be searched with the ":"
+        * which indicates that the search should be a "contains"
+        * search.
+        * However if the search term does not match the JOI for the
+        * field the API will blow up.
+        ************************************************* */
+        if (f === 'approvalStatus') {
+          query[`filter[${f}]`] = `${params.filter[f]}`;
+        } else {
+          query[`filter[${f}]`] = `:${params.filter[f]}`;
+        }
       });
 
       url = `${apiUrl}/${resource}?${stringify(query)}`;
@@ -110,6 +121,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
     .then((response) => {
       switch (type) {
         case GET_LIST: {
+          console.log(response);
           return {
             data: response.data.data.map(value => Object.assign(
               { id: value.id },
