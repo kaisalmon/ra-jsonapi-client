@@ -60,8 +60,8 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
           query[`filter[${f}]`] = `:${params.filter[f]}`;
         }
       });
-
       url = `${apiUrl}/${resource}?${stringify(query)}`;
+      console.log(params, query, url);
       break;
     }
 

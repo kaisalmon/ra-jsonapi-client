@@ -69,7 +69,18 @@ exports.default = function (apiUrl) {
           };
 
           Object.keys(params.filter).forEach(function (f) {
-            query['filter[' + f + ']'] = ':' + params.filter[f];
+            /** ************************************************
+            * Sometimes queries need to be searched with the ":"
+            * which indicates that the search should be a "contains"
+            * search.
+            * However if the search term does not match the JOI for the
+            * field the API will blow up.
+            ************************************************* */
+            if (f === 'approvalStatus') {
+              query['filter[' + f + ']'] = '' + params.filter[f];
+            } else {
+              query['filter[' + f + ']'] = ':' + params.filter[f];
+            }
           });
 
           url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
@@ -138,6 +149,7 @@ exports.default = function (apiUrl) {
       switch (type) {
         case _actions.GET_LIST:
           {
+            console.log(response);
             return {
               data: response.data.data.map(function (value) {
                 return Object.assign({ id: value.id }, value.attributes, { relationships: value.relationships });
