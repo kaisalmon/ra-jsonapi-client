@@ -128,7 +128,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
               value.attributes,
               { relationships: value.relationships },
             )),
-            total: settings ? response.data.meta.page[settings.total] : 0,
+            total: settings && response.data.meta.page ? response.data.meta.page[settings.total] : 0,
           };
         }
 

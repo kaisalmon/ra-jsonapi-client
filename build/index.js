@@ -154,7 +154,7 @@ exports.default = function (apiUrl) {
               data: response.data.data.map(function (value) {
                 return Object.assign({ id: value.id }, value.attributes, { relationships: value.relationships });
               }),
-              total: settings ? response.data.meta.page[settings.total] : 0
+              total: settings && response.data.meta.page ? response.data.meta.page[settings.total] : 0
             };
           }
 
