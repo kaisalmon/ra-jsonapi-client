@@ -54,7 +54,6 @@ exports.default = function (apiUrl) {
     var options = {
       headers: settings.headers
     };
-    console.log('HERE:::', type);
     switch (type) {
       case _actions.GET_LIST:
         {
@@ -82,9 +81,7 @@ exports.default = function (apiUrl) {
               query['filter[' + f + ']'] = ':' + params.filter[f];
             }
           });
-          console.log(params);
           if (params.sort) {
-            console.log('SORT STUFF');
             var _params$sort = params.sort,
                 order = _params$sort.order,
                 field = _params$sort.field;
@@ -93,7 +90,6 @@ exports.default = function (apiUrl) {
             query.sort = '' + sign + field;
           }
           url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
-          console.log(url);
           break;
         }
 

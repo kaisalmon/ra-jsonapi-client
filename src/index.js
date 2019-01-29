@@ -36,7 +36,6 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
   const options = {
     headers: settings.headers,
   };
-  console.log('HERE:::', type);
   switch (type) {
     case GET_LIST: {
       const { page, perPage } = params.pagination;
@@ -60,15 +59,12 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
           query[`filter[${f}]`] = `:${params.filter[f]}`;
         }
       });
-      console.log(params);
       if (params.sort) {
-        console.log('SORT STUFF');
         const { order, field } = params.sort;
         const sign = order === 'DESC' ? '' : '-';
         query.sort = `${sign}${field}`;
       }
       url = `${apiUrl}/${resource}?${stringify(query)}`;
-      console.log(url);
       break;
     }
 
