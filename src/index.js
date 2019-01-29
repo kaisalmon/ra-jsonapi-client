@@ -54,19 +54,21 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
         * However if the search term does not match the JOI for the
         * field the API will blow up.
         ************************************************* */
-        if (f === 'approvalStatus') {
+        if (f === 'approvalStatus' || params.filter[f] === true || params.filter[f] === false) {
           query[`filter[${f}]`] = `${params.filter[f]}`;
         } else {
           query[`filter[${f}]`] = `:${params.filter[f]}`;
         }
       });
+      console.log(params);
       if (params.sort) {
+        console.log("SORT STUFF");
         const { order, field } = params.sort;
         const sign = order === 'DESC' ? '' : '-';
         query.sort = `${sign}${field}`;
       }
       url = `${apiUrl}/${resource}?${stringify(query)}`;
-      console.log(params, query, url);
+      console.log(url);
       break;
     }
 
