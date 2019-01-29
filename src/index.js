@@ -60,6 +60,11 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
           query[`filter[${f}]`] = `:${params.filter[f]}`;
         }
       });
+      if (params.sort) {
+        const { order, field } = params.sort;
+        const sign = order === 'DESC' ? '' : '-';
+        query.sort = `${sign}${field}`;
+      }
       url = `${apiUrl}/${resource}?${stringify(query)}`;
       console.log(params, query, url);
       break;
