@@ -135,7 +135,7 @@ exports.default = function (apiUrl) {
           var _query = ids.map(function (id) {
             return 'filter[id]=' + id;
           }).join('&');
-          url = apiUrl + '/' + resource + '?' + _query + '}';
+          url = apiUrl + '/' + resource + '?' + _query;
           console.log(params, _query, url);
           break;
         }
