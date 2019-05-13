@@ -77,6 +77,9 @@ exports.default = function (apiUrl) {
             ************************************************* */
             if (f === 'approvalStatus' || params.filter[f] === true || params.filter[f] === false) {
               query['filter[' + f + ']'] = '' + params.filter[f];
+            } else if (params.filter[f].startsWith('!:')) {
+              var fWithoutWildcard = params.filter[f].slice(2);
+              query['filter[' + f + ']'] = fWithoutWildcard;
             } else {
               query['filter[' + f + ']'] = ':' + params.filter[f];
             }
@@ -178,7 +181,7 @@ exports.default = function (apiUrl) {
           {
             var rawdata = response.data.data;
             var _data = rawdata.map(function (e) {
-              return _extends({}, e.attributes, { id: e.id });
+              return _extends({}, e.attributes, e.relationships, { id: e.id });
             });
             return {
               data: _data,

@@ -55,6 +55,9 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
         ************************************************* */
         if (f === 'approvalStatus' || params.filter[f] === true || params.filter[f] === false) {
           query[`filter[${f}]`] = `${params.filter[f]}`;
+        } else if (params.filter[f].startsWith('!:')) {
+          const fWithoutWildcard = params.filter[f].slice(2);
+          query[`filter[${f}]`] = fWithoutWildcard;
         } else {
           query[`filter[${f}]`] = `:${params.filter[f]}`;
         }
@@ -150,7 +153,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
 
         case GET_MANY_REFERENCE: {
           const rawdata = response.data.data;
-          const data = rawdata.map(e => ({ ...e.attributes, id: e.id }));
+          const data = rawdata.map(e => ({ ...e.attributes, ...e.relationships, id: e.id }));
           return {
             data,
             total: data.length,
