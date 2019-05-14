@@ -1,18 +1,21 @@
 # ra-jsonapi-client
 [![Build Status](https://travis-ci.org/henvo/ra-jsonapi-client.svg?branch=master)](https://travis-ci.org/henvo/ra-jsonapi-client)
+[![npm version](https://badge.fury.io/js/ra-jsonapi-client.svg)](https://badge.fury.io/js/ra-jsonapi-client)
 
 A JSONAPI compatible data provider for
 [react-admin](https://github.com/marmelab/react-admin).
 
 
 ## Features
-Currently only the basic actions are supported:
+Currently these actions are supported:
 
 * `GET_LIST`
 * `GET_ONE`
 * `CREATE`
 * `UPDATE`
 * `DELETE`
+* `GET_MANY`
+* `GET_MANY_REFERENCE`
 
 ## Installation
 

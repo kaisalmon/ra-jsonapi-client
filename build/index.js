@@ -60,7 +60,8 @@ exports.default = function (apiUrl) {
           var _params$pagination = params.pagination,
               page = _params$pagination.page,
               perPage = _params$pagination.perPage;
-          // TODO: Allow sorting, filtering etc.
+
+          // Create query with pagination params.
 
           var query = {
             'page[offset]': (page - 1) * perPage,
@@ -89,7 +90,7 @@ exports.default = function (apiUrl) {
                 order = _params$sort.order,
                 field = _params$sort.field;
 
-            var sign = order === 'DESC' ? '' : '-';
+            var sign = order === 'ASC' ? '' : '-';
             query.sort = '' + sign + field;
           }
           url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
@@ -147,6 +148,31 @@ exports.default = function (apiUrl) {
         {
           var _query2 = 'filter[' + params.target + ']=' + params.id;
           url = apiUrl + '/' + resource + '?' + _query2;
+          break;
+        }
+
+      case _actions.GET_MANY_REFERENCE:
+        {
+          var _params$pagination2 = params.pagination,
+              _page = _params$pagination2.page,
+              _perPage = _params$pagination2.perPage;
+
+          // Create query with pagination params.
+
+          var _query3 = {
+            'page[number]': _page,
+            'page[size]': _perPage
+          };
+
+          // Add all filter params to query.
+          Object.keys(params.filter || {}).forEach(function (key) {
+            _query3['filter[' + key + ']'] = params.filter[key];
+          });
+
+          // Add the reference id to the filter params.
+          _query3['filter[' + params.target + ']'] = params.id;
+
+          url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(_query3);
           break;
         }
 

@@ -39,7 +39,8 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
   switch (type) {
     case GET_LIST: {
       const { page, perPage } = params.pagination;
-      // TODO: Allow sorting, filtering etc.
+
+      // Create query with pagination params.
       const query = {
         'page[offset]': (page - 1) * perPage,
         'page[limit]': perPage,
@@ -64,7 +65,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
       });
       if (params.sort) {
         const { order, field } = params.sort;
-        const sign = order === 'DESC' ? '' : '-';
+        const sign = order === 'ASC' ? '' : '-';
         query.sort = `${sign}${field}`;
       }
       url = `${apiUrl}/${resource}?${stringify(query)}`;
@@ -116,6 +117,27 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
     case GET_MANY_REFERENCE: {
       const query = `filter[${params.target}]=${params.id}`;
       url = `${apiUrl}/${resource}?${query}`;
+      break;
+    }
+
+    case GET_MANY_REFERENCE: {
+      const { page, perPage } = params.pagination;
+
+      // Create query with pagination params.
+      const query = {
+        'page[number]': page,
+        'page[size]': perPage,
+      };
+
+      // Add all filter params to query.
+      Object.keys(params.filter || {}).forEach((key) => {
+        query[`filter[${key}]`] = params.filter[key];
+      });
+
+      // Add the reference id to the filter params.
+      query[`filter[${params.target}]`] = params.id;
+
+      url = `${apiUrl}/${resource}?${stringify(query)}`;
       break;
     }
 
