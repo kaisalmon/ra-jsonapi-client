@@ -41,6 +41,7 @@
     "axios": "^0.18.0",
     "chai-as-promised": "^7.1.1",
     "deepmerge": "^2.1.1",
+    "lodash": "^4.17.11",
     "qs": "^6.5.2"
   }
 }
