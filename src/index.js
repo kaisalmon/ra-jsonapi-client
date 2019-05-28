@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import merge from 'deepmerge';
+import _ from 'lodash';
 import axios from 'axios';
 import {
   GET_LIST,
@@ -92,7 +93,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
         data: {
           id: params.id,
           type: resource,
-          attributes: params.data,
+          attributes: _.omit(params.data, ['relationships']),
         },
       };
 

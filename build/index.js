@@ -12,6 +12,10 @@ var _deepmerge = require('deepmerge');
 
 var _deepmerge2 = _interopRequireDefault(_deepmerge);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _axios = require('axios');
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -118,7 +122,7 @@ exports.default = function (apiUrl) {
             data: {
               id: params.id,
               type: resource,
-              attributes: params.data
+              attributes: _lodash2.default.omit(params.data, ['relationships'])
             }
           };
 
